@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimsManagementApp", "ClaimsManagementApp\ClaimsManagementApp.csproj", "{1E0E6BFC-EFE9-4C16-9DE9-2C0B0DB4632F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICClaimTest1", "ICClaimTest1\ICClaimTest1.csproj", "{E9479432-C59F-4E09-8B8F-903A1DDE52DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E0E6BFC-EFE9-4C16-9DE9-2C0B0DB4632F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0E6BFC-EFE9-4C16-9DE9-2C0B0DB4632F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0E6BFC-EFE9-4C16-9DE9-2C0B0DB4632F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0E6BFC-EFE9-4C16-9DE9-2C0B0DB4632F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9479432-C59F-4E09-8B8F-903A1DDE52DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9479432-C59F-4E09-8B8F-903A1DDE52DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9479432-C59F-4E09-8B8F-903A1DDE52DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9479432-C59F-4E09-8B8F-903A1DDE52DF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75928BE1-4ECD-4E36-AA3C-0189C1A7FEB7}
+	EndGlobalSection
+EndGlobal

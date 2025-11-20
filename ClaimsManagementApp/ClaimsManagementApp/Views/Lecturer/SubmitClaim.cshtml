@@ -1,0 +1,732 @@
+﻿@model Claim
+@{
+    ViewData["Title"] = "Submit Claim - Automated";
+}
+
+<div class="container">
+    <h2><i class="fas fa-rocket me-2"></i>Automated Claim Submission</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-magic me-2"></i>Smart Claim Form
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="autoClaimForm" asp-action="SubmitClaim" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="LecturerName" class="form-label">
+                                        <i class="fas fa-user me-1"></i>Lecturer Name *
+                                    </label>
+                                    <input asp-for="LecturerName" class="form-control auto-validate"
+                                           id="LecturerName"
+                                           placeholder="Enter your full name" required />
+                                    <div class="validation-feedback" id="LecturerNameFeedback"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="HoursWorked" class="form-label">
+                                        <i class="fas fa-clock me-1"></i>Hours Worked *
+                                    </label>
+                                    <input asp-for="HoursWorked" type="number" step="0.5"
+                                           class="form-control auto-calculate auto-validate"
+                                           id="HoursWorked"
+                                           placeholder="Enter hours worked" required />
+                                    <div class="validation-feedback" id="HoursWorkedFeedback"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="HourlyRate" class="form-label">
+                                        <i class="fas fa-money-bill me-1"></i>Hourly Rate *
+                                    </label>
+                                    <input asp-for="HourlyRate" type="number" step="0.01"
+                                           class="form-control auto-calculate auto-validate"
+                                           id="HourlyRate"
+                                           placeholder="Enter hourly rate (50-500)" required />
+                                    <div class="validation-feedback" id="HourlyRateFeedback"></div>
+                                </div>
+                            </div> <!-- Fixed: Added missing closing div -->
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-robot me-1"></i>AI-Powered Assistance
+                                    </label>
+                                    <div class="ai-suggestions card bg-light">
+                                        <div class="card-body">
+                                            <small class="text-muted">
+                                                <i class="fas fa-lightbulb me-1"></i>
+                                                <span id="aiSuggestion">Enter your hours and rate to see smart suggestions...</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Auto-calculated Preview -->
+                                <div class="calculation-preview card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-calculator me-1"></i>Auto-Calculated Preview
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <small class="text-muted">Hours</small>
+                                                <div class="h5" id="previewHours">0</div>
+                                            </div>
+                                            <div class="col-4">
+                                                <small class="text-muted">Rate</small>
+                                                <div class="h5" id="previewRate">R 0</div>
+                                            </div>
+                                            <div class="col-4">
+                                                <small class="text-muted">Total</small>
+                                                <div class="h5 text-success" id="previewTotal">R 0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">
+                                <i class="fas fa-sticky-note me-1"></i>Additional Notes
+                            </label>
+                            <textarea asp-for="AdditionalNotes" class="form-control"
+                                      rows="3" placeholder="Add any additional information..."></textarea>
+                        </div>
+
+                        <!-- Enhanced File Upload with Automation -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-cloud-upload-alt me-1"></i>Supporting Documents
+                            </label>
+                            <div class="file-upload-area border rounded p-3 text-center">
+                                <input type="file" name="documents" multiple
+                                       class="form-control"
+                                       id="fileInput"
+                                       accept=".pdf,.docx,.xlsx"
+                                       style="display: none;" />
+                                <div class="upload-placeholder" id="uploadPlaceholder">
+                                    <i class="fas fa-file-upload fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted mb-2">Drag & drop files or click to browse</p>
+                                    <small class="text-muted">Supported: PDF, DOCX, XLSX (Max 5MB each)</small>
+                                </div>
+                                <div id="filePreview" class="mt-3"></div>
+                            </div>
+                            <div class="file-validation-feedback" id="fileFeedback"></div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" id="autoFillDemo" class="btn btn-outline-info me-2">
+                                <i class="fas fa-bolt me-1"></i>Auto-Fill Demo
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn btn-success px-4">
+                                <i class="fas fa-paper-plane me-1"></i>Submit Claim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Real-time Validation Panel -->
+            <div class="card sticky-top">
+                <div class="card-header bg-info text-white">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-check-circle me-1"></i>Validation Status
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="validationStatus">
+                        <div class="validation-item" data-field="LecturerName">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span>Lecturer name is required</span>
+                        </div>
+                        <div class="validation-item" data-field="HoursWorked">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span>Hours must be between 0.5 and 100</span>
+                        </div>
+                        <div class="validation-item" data-field="HourlyRate">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span>Rate must be between R50 and R500</span>
+                        </div>
+                        <div class="validation-item" data-field="FormStatus">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span>All fields must be valid to submit</span>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 8px;">
+                        <div id="validationProgress" class="progress-bar bg-danger" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2 text-center">
+                        <small class="text-muted" id="progressText">0% Complete - Form cannot be submitted</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .file-upload-area.dragover {
+                border-color: #0d6efd;
+                background-color: rgba(13, 110, 253, 0.05);
+            }
+
+            .file-upload-area:hover {
+                border-color: #0d6efd;
+                background-color: rgba(13, 110, 253, 0.02);
+            }
+
+        .validation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+            .validation-item.valid {
+                color: #198754;
+            }
+
+                .validation-item.valid i {
+                    color: #198754;
+                }
+
+            .validation-item.invalid {
+                color: #dc3545;
+            }
+
+            .validation-item.warning {
+                color: #ffc107;
+            }
+
+                .validation-item.warning i {
+                    color: #ffc107;
+                }
+
+        .calculation-preview {
+            transition: all 0.3s ease;
+        }
+
+        .ai-suggestions {
+            transition: all 0.3s ease;
+        }
+
+        .sticky-top {
+            top: 20px;
+        }
+
+        .file-preview-item {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .is-valid {
+            border-color: #198754 !important;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        .validation-feedback {
+            min-height: 20px;
+            font-size: 0.875em;
+        }
+
+        #submitBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Main initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing claim submission form...');
+
+            initializeAutoCalculation();
+            initializeValidation();
+            initializeFileUpload();
+            initializeAutoFillDemo();
+            initializeFormSubmission();
+
+            console.log('Claim submission form initialized successfully');
+        });
+
+        // Auto-Calculation Functionality
+        function initializeAutoCalculation() {
+            const hoursInput = document.getElementById('HoursWorked');
+            const rateInput = document.getElementById('HourlyRate');
+
+            function updateCalculations() {
+                const hours = parseFloat(hoursInput?.value) || 0;
+                const rate = parseFloat(rateInput?.value) || 0;
+                const total = hours * rate;
+
+                // Update preview displays
+                const previewHours = document.getElementById('previewHours');
+                const previewRate = document.getElementById('previewRate');
+                const previewTotal = document.getElementById('previewTotal');
+
+                if (previewHours) previewHours.textContent = hours.toFixed(1);
+                if (previewRate) previewRate.textContent = `R ${rate.toFixed(2)}`;
+                if (previewTotal) previewTotal.textContent = `R ${total.toFixed(2)}`;
+
+                // Update AI suggestions
+                updateAISuggestions(hours, rate);
+            }
+
+            function updateAISuggestions(hours, rate) {
+                const suggestionElement = document.getElementById('aiSuggestion');
+                if (!suggestionElement) return;
+
+                let suggestion = '';
+
+                if (hours > 40 && rate > 400) {
+                    suggestion = 'High hours and premium hourly rate detected. Ensure you have proper authorization documents.';
+                } else if (hours > 40) {
+                    suggestion = 'High hours detected. Consider attaching overtime authorization.';
+                } else if (rate > 400) {
+                    suggestion = 'Premium hourly rate detected. Ensure proper documentation is attached.';
+                } else if (hours < 5 && hours > 0) {
+                    suggestion = 'Low hours detected. Consider combining with other part-time work.';
+                } else if (hours === 0 || rate === 0) {
+                    suggestion = 'Enter your hours and hourly rate to see smart suggestions...';
+                } else {
+                    suggestion = 'Standard claim parameters detected. Ready for submission.';
+                }
+
+                suggestionElement.textContent = suggestion;
+            }
+
+            // Add event listeners
+            if (hoursInput) {
+                hoursInput.addEventListener('input', updateCalculations);
+                hoursInput.addEventListener('change', updateCalculations);
+            }
+            if (rateInput) {
+                rateInput.addEventListener('input', updateCalculations);
+                rateInput.addEventListener('change', updateCalculations);
+            }
+
+            // Initial calculation
+            updateCalculations();
+        }
+
+        // Validation System
+        function initializeValidation() {
+            const inputs = ['LecturerName', 'HoursWorked', 'HourlyRate'];
+
+            inputs.forEach(fieldName => {
+                const input = document.getElementById(fieldName);
+                if (input) {
+                    input.addEventListener('input', validateAllFields);
+                    input.addEventListener('change', validateAllFields);
+                    input.addEventListener('blur', validateAllFields);
+                }
+            });
+
+            // Initial validation
+            validateAllFields();
+        }
+
+        function validateAllFields() {
+            const validations = {
+                LecturerName: validateLecturerName(),
+                HoursWorked: validateHoursWorked(),
+                HourlyRate: validateHourlyRate()
+            };
+
+            updateValidationDisplay(validations);
+            updateSubmitButton(validations);
+        }
+
+        function validateLecturerName() {
+            const input = document.getElementById('LecturerName');
+            if (!input) return false;
+
+            const value = input.value.trim();
+            const isValid = value.length >= 2;
+
+            // Update field appearance
+            if (value.length === 0) {
+                input.classList.remove('is-valid', 'is-invalid');
+            } else {
+                input.classList.toggle('is-valid', isValid);
+                input.classList.toggle('is-invalid', !isValid);
+            }
+
+            // Update feedback
+            const feedback = document.getElementById('LecturerNameFeedback');
+            if (feedback) {
+                if (value.length === 0) {
+                    feedback.innerHTML = '<small class="text-muted">Enter your full name</small>';
+                } else if (isValid) {
+                    feedback.innerHTML = '<small class="text-success"><i class="fas fa-check"></i> Valid name</small>';
+                } else {
+                    feedback.innerHTML = '<small class="text-danger"><i class="fas fa-times"></i> Name is too short</small>';
+                }
+            }
+
+            return isValid;
+        }
+
+        function validateHoursWorked() {
+            const input = document.getElementById('HoursWorked');
+            if (!input) return false;
+
+            const value = parseFloat(input.value) || 0;
+            const isValid = value >= 0.5 && value <= 100;
+
+            // Update field appearance
+            if (input.value === '') {
+                input.classList.remove('is-valid', 'is-invalid');
+            } else {
+                input.classList.toggle('is-valid', isValid);
+                input.classList.toggle('is-invalid', !isValid);
+            }
+
+            // Update feedback
+            const feedback = document.getElementById('HoursWorkedFeedback');
+            if (feedback) {
+                if (input.value === '') {
+                    feedback.innerHTML = '<small class="text-muted">Enter hours worked (0.5-100)</small>';
+                } else if (isValid) {
+                    feedback.innerHTML = '<small class="text-success"><i class="fas fa-check"></i> Valid hours</small>';
+                } else {
+                    feedback.innerHTML = '<small class="text-danger"><i class="fas fa-times"></i> Must be between 0.5 and 100</small>';
+                }
+            }
+
+            return isValid;
+        }
+
+        function validateHourlyRate() {
+            const input = document.getElementById('HourlyRate');
+            if (!input) return false;
+
+            const value = parseFloat(input.value) || 0;
+            const isValid = value >= 50 && value <= 500;
+
+            // Update field appearance
+            if (input.value === '') {
+                input.classList.remove('is-valid', 'is-invalid');
+            } else {
+                input.classList.toggle('is-valid', isValid);
+                input.classList.toggle('is-invalid', !isValid);
+            }
+
+            // Update feedback
+            const feedback = document.getElementById('HourlyRateFeedback');
+            if (feedback) {
+                if (input.value === '') {
+                    feedback.innerHTML = '<small class="text-muted">Enter hourly rate (50-500)</small>';
+                } else if (isValid) {
+                    feedback.innerHTML = '<small class="text-success"><i class="fas fa-check"></i> Valid hourly rate</small>';
+                } else {
+                    feedback.innerHTML = '<small class="text-danger"><i class="fas fa-times"></i> Must be between 50 and 500</small>';
+                }
+            }
+
+            return isValid;
+        }
+
+        function updateValidationDisplay(validations) {
+            const progressBar = document.getElementById('validationProgress');
+            const progressText = document.getElementById('progressText');
+
+            // Count valid fields
+            const totalFields = Object.keys(validations).length;
+            const validCount = Object.values(validations).filter(Boolean).length;
+            const progress = (validCount / totalFields) * 100;
+
+            // Update progress bar
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+                progressBar.className = 'progress-bar';
+
+                if (progress === 100) {
+                    progressBar.classList.add('bg-success');
+                } else if (progress >= 50) {
+                    progressBar.classList.add('bg-warning');
+                } else {
+                    progressBar.classList.add('bg-danger');
+                }
+            }
+
+            // Update progress text
+            if (progressText) {
+                if (progress === 100) {
+                    progressText.textContent = '100% Complete - Ready to submit!';
+                    progressText.className = 'text-success';
+                } else {
+                    progressText.textContent = `${Math.round(progress)}% Complete - ${totalFields - validCount} requirement(s) remaining`;
+                    progressText.className = 'text-danger';
+                }
+            }
+
+            // Update individual validation items
+            updateValidationItem('LecturerName', validations.LecturerName);
+            updateValidationItem('HoursWorked', validations.HoursWorked);
+            updateValidationItem('HourlyRate', validations.HourlyRate);
+            updateValidationItem('FormStatus', progress === 100);
+        }
+
+        function updateValidationItem(fieldName, isValid) {
+            const item = document.querySelector(`.validation-item[data-field="${fieldName}"]`);
+            if (!item) return;
+
+            const icon = item.querySelector('i');
+            const text = item.querySelector('span');
+
+            item.className = `validation-item ${isValid ? 'valid' : 'invalid'}`;
+
+            if (icon) {
+                icon.className = `fas ${isValid ? 'fa-check text-success' : 'fa-times text-danger'} me-2`;
+            }
+
+            if (text) {
+                switch(fieldName) {
+                    case 'LecturerName':
+                        text.textContent = isValid ? 'Lecturer name is valid' : 'Lecturer name is required';
+                        break;
+                    case 'HoursWorked':
+                        text.textContent = isValid ? 'Hours are within range' : 'Hours must be between 0.5 and 100';
+                        break;
+                    case 'HourlyRate':
+                        text.textContent = isValid ? 'Hourly rate is within range' : 'Hourly rate must be between 50 and 500';
+                        break;
+                    case 'FormStatus':
+                        text.textContent = isValid ? 'All requirements met - ready to submit!' : 'All fields must be valid to submit';
+                        break;
+                }
+            }
+        }
+
+        function updateSubmitButton(validations) {
+            const submitBtn = document.getElementById('submitBtn');
+            const allValid = Object.values(validations).every(Boolean);
+
+            if (submitBtn) {
+                submitBtn.disabled = !allValid;
+
+                if (allValid) {
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane me-1"></i>Submit Claim';
+                    submitBtn.classList.remove('btn-secondary');
+                    submitBtn.classList.add('btn-success');
+                } else {
+                    submitBtn.innerHTML = '<i class="fas fa-lock me-1"></i>Complete Requirements';
+                    submitBtn.classList.remove('btn-success');
+                    submitBtn.classList.add('btn-secondary');
+                }
+            }
+        }
+
+        // File Upload Functionality
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.querySelector('.file-upload-area');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            const preview = document.getElementById('filePreview');
+
+            if (!fileInput || !uploadArea) return;
+
+            // Click to upload
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            // Drag and drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelection();
+            });
+
+            fileInput.addEventListener('change', handleFileSelection);
+
+            function handleFileSelection() {
+                const files = fileInput.files;
+                if (!preview || !placeholder) return;
+
+                preview.innerHTML = '';
+                placeholder.style.display = files.length ? 'none' : 'block';
+
+                Array.from(files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-preview-item';
+                    fileItem.innerHTML = `
+                        <div class="flex-grow-1">
+                            <i class="fas fa-file me-2"></i>
+                            <span>${file.name}</span>
+                            <small class="text-muted ms-2">(${(file.size / 1024 / 1024).toFixed(2)} MB)</small>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    preview.appendChild(fileItem);
+                });
+
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-file-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeFile(index);
+                    });
+                });
+            }
+
+            window.removeFile = function(index) {
+                const dt = new DataTransfer();
+                const files = fileInput.files;
+
+                for (let i = 0; i < files.length; i++) {
+                    if (i !== index) dt.items.add(files[i]);
+                }
+
+                fileInput.files = dt.files;
+                handleFileSelection();
+            };
+        }
+
+        // Auto-Fill Demo
+        function initializeAutoFillDemo() {
+            const autoFillBtn = document.getElementById('autoFillDemo');
+            if (!autoFillBtn) return;
+
+            autoFillBtn.addEventListener('click', function() {
+                document.getElementById('LecturerName').value = 'Thato Mohulatsi';
+                document.getElementById('HoursWorked').value = '49';
+                document.getElementById('HourlyRate').value = '467';
+
+                const notesTextarea = document.querySelector('textarea[name="AdditionalNotes"]');
+                if (notesTextarea) {
+                    notesTextarea.value = 'Completed research project supervision and exam marking.';
+                }
+
+                // Trigger all validation and calculations
+                validateAllFields();
+                updateCalculations();
+            });
+        }
+
+        // Form Submission
+        function initializeFormSubmission() {
+            const form = document.getElementById('autoClaimForm');
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                // Final validation check
+                const validations = {
+                    LecturerName: validateLecturerName(),
+                    HoursWorked: validateHoursWorked(),
+                    HourlyRate: validateHourlyRate()
+                };
+
+                const allValid = Object.values(validations).every(Boolean);
+
+                if (!allValid) {
+                    e.preventDefault();
+                    alert('Please complete all required fields before submitting.');
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Submitting...';
+                }
+
+                // Form will submit normally if all validations pass
+            });
+        }
+
+        // Helper function to recalculate
+        function updateCalculations() {
+            const hoursInput = document.getElementById('HoursWorked');
+            const rateInput = document.getElementById('HourlyRate');
+
+            if (!hoursInput || !rateInput) return;
+
+            const hours = parseFloat(hoursInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            const total = hours * rate;
+
+            // Update preview displays
+            const previewHours = document.getElementById('previewHours');
+            const previewRate = document.getElementById('previewRate');
+            const previewTotal = document.getElementById('previewTotal');
+
+            if (previewHours) previewHours.textContent = hours.toFixed(1);
+            if (previewRate) previewRate.textContent = `R ${rate.toFixed(2)}`;
+            if (previewTotal) previewTotal.textContent = `R ${total.toFixed(2)}`;
+
+            // Update AI suggestions
+            updateAISuggestions(hours, rate);
+        }
+
+        // AI Suggestions function
+        function updateAISuggestions(hours, rate) {
+            const suggestionElement = document.getElementById('aiSuggestion');
+            if (!suggestionElement) return;
+
+            let suggestion = '';
+
+            if (hours > 40 && rate > 400) {
+                suggestion = 'High hours and premium hourly rate detected. Ensure you have proper authorization documents.';
+            } else if (hours > 40) {
+                suggestion = 'High hours detected. Consider attaching overtime authorization.';
+            } else if (rate > 400) {
+                suggestion = 'Premium hourly rate detected. Ensure proper documentation is attached.';
+            } else if (hours < 5 && hours > 0) {
+                suggestion = 'Low hours detected. Consider combining with other part-time work.';
+            } else if (hours === 0 || rate === 0) {
+                suggestion = 'Enter your hours and hourly rate to see smart suggestions...';
+            } else {
+                suggestion = 'Standard claim parameters detected. Ready for submission.';
+            }
+
+            suggestionElement.textContent = suggestion;
+        }
+    </script>
+}

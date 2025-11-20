@@ -1,0 +1,70 @@
+/* _content/ClaimsManagementApp/Views/Shared/_Layout.cshtml.rz.scp.css */
+@ {
+    ViewData ["Title"] = "Home - Claims Management";
+}
+
+<div class="container text-center py-5" >
+<h1 class="display-4 mb-5 text-dark" > Claims Management System</h1 >
+
+<div class="row" >
+<!-- Lecturer Portal Card -->
+<div class="col-md-3 mb-4" >
+<div class="card h-100 shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #2C7BE5, #6A89CC);" >
+<div class="card-body text-white" >
+<i class="fas fa-user-graduate fa-3x mb-3" > </i >
+<h5 class="card-title" > Lecturer Portal</h5 >
+<p class="card-text" > Submit and track your claims</p >
+<a href="@Url.Action("Index", "Lecturer")" class="btn btn-light btn-lg rounded-pill shadow-sm" > Enter as Lecturer</a >
+</div >
+</div >
+</div >
+<!-- Coordinator Portal Card -->
+<div class="col-md-3 mb-4" >
+<div class="card h-100 shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #4CAF50, #81C784);" >
+<div class="card-body text-white" >
+<i class="fas fa-user-tie fa-3x mb-3" > </i >
+<h5 class="card-title" > Coordinator Portal</h5 >
+<p class="card-text" > Review and verify claims</p >
+<a href="@Url.Action("PendingClaims", "Coordinator")" class="btn btn-light btn-lg rounded-pill shadow-sm" > Enter as Coordinator</a >
+</div >
+</div >
+</div >
+<!-- Manager Portal Card -->
+<div class="col-md-3 mb-4" >
+<div class="card h-100 shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #FFC107, #FFEB3B);" >
+<div class="card-body text-dark" >
+<i class="fas fa-user-cog fa-3x mb-3" > </i >
+<h5 class="card-title" > Manager Portal</h5 >
+<p class="card-text" > Final approval of claims</p >
+<a href="@Url.Action("PendingClaims", "Manager")" class="btn btn-light btn-lg rounded-pill shadow-sm" > Enter as Manager</a >
+</div >
+</div >
+</div >
+<!-- HR Portal Card -->
+<div class="col-md-3 mb-4" >
+<div class="card h-100 shadow-lg border-0 rounded-lg" style="background: linear-gradient(135deg, #00BCD4, #80DEEA);" >
+<div class="card-body text-white" >
+<i class="fas fa-hand-holding-usd fa-3x mb-3" > </i >
+<h5 class="card-title" > HR Portal</h5 >
+<p class="card-text" > Process payments and settlements</p >
+<a href="@Url.Action("Dashboard", "HR")" class="btn btn-light btn-lg rounded-pill shadow-sm" > Enter as HR</a >
+</div >
+</div >
+</div >
+</div >
+</div >
+
+<style >
+/* Hover Effects for Cards */
+.card:hover[b-vgrtn67zr9] {
+    transform: translateY(-10px);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Button Hover Effects */
+.btn:hover[b-vgrtn67zr9] {
+    background-color: #ddd;
+    color: #333;
+}
+
+</style[b-vgrtn67zr9] >
