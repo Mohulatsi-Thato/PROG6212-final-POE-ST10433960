@@ -1,0 +1,46 @@
+Claims Management System
+📖 Overview
+
+The Contract Monthly Claims Management System is a web application built with ASP.NET Core MVC.
+It helps lecturers submit their monthly claims online and makes it easier for Programme Coordinators, Academic Managers, and HR to review, approve, and process those claims.
+
+The system replaces the old manual, paper-based process with a faster and more transparent digital workflow.
+***********************************
+Main Features:
+
+Lecturer Features
+
+Submit claims online using a simple form.
+
+Enter hours worked and hourly rate.
+
+Automatic calculation of total payment.
+
+Upload supporting documents (PDF, DOCX, XLS).
+
+Track claim status: Pending, Verified, Approved, Rejected.
+
+
+
+Coordinator & Manager Features
+
+View all pending lecturer claims.
+
+Check details and supporting documents.
+
+Approve or reject claims with one click.
+
+Status updates happen instantly.
+
+
+
+HR Features
+
+Access all approved claims.
+
+Generate payment reports or simple invoices.
+
+Manage lecturer data (basic profile info).
+
+Export payment summaries.
+******************************************
