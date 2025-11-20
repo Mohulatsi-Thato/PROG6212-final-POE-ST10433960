@@ -90,3 +90,19 @@ Claim status updates
 Approval workflow logic
 
 Error handling and exception cases
+*******************************************************
+Version Control
+
+This project includes multiple Git commits showing:
+
+UI design
+
+Database setup
+
+Controller development
+
+Document upload functionality
+
+Approval workflow
+
+Final touches and bug fixes
