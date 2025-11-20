@@ -11,6 +11,13 @@ namespace ClaimsManagementApp.Services
         private readonly long _maxFileSize = 5 * 1024 * 1024; // 5MB
         private readonly string[] _allowedExtensions = { ".pdf", ".docx", ".xlsx" };
 
+        // AES configuration – valid sizes
+        private static readonly byte[] EncryptionKey =
+            Encoding.UTF8.GetBytes("ThisIsA32ByteLongEncryptionKey!!"); // 32 bytes
+
+        private static readonly byte[] EncryptionIV =
+            Encoding.UTF8.GetBytes("ThisIsAnIV123456"); // 16 bytes
+
         public FileService()
         {
             if (!Directory.Exists(_uploadPath))
@@ -26,9 +33,7 @@ namespace ClaimsManagementApp.Services
             var fileName = $"{Guid.NewGuid()}{extension}";
             var filePath = Path.Combine(_uploadPath, fileName);
 
-            // Encrypt file before saving
             await EncryptAndSaveFileAsync(file, filePath);
-
             return fileName;
         }
 
@@ -62,23 +67,24 @@ namespace ClaimsManagementApp.Services
         private async Task EncryptAndSaveFileAsync(IFormFile file, string filePath)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes("Your32ByteEncryptionKey123!"); // In production, use secure key storage
-            aes.IV = new byte[16]; // Initialization vector
+            aes.Key = EncryptionKey;
+            aes.IV = EncryptionIV;
 
             using var inputStream = file.OpenReadStream();
-            using var outputStream = new FileStream(filePath, FileMode.Create);
+            using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             using var cryptoStream = new CryptoStream(outputStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
 
             await inputStream.CopyToAsync(cryptoStream);
+            await cryptoStream.FlushAsync();
         }
 
         private async Task<byte[]> DecryptFileAsync(string filePath)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes("Your32ByteEncryptionKey123!");
-            aes.IV = new byte[16];
+            aes.Key = EncryptionKey;
+            aes.IV = EncryptionIV;
 
-            using var inputStream = new FileStream(filePath, FileMode.Open);
+            using var inputStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             using var cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
             using var memoryStream = new MemoryStream();
 
