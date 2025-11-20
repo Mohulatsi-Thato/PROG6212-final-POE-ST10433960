@@ -1,6 +1,6 @@
 Claims Management System
 📖 Overview
-
+Github link: https://github.com/Mohulatsi-Thato/PROG6212-final-POE-ST10433960.git
 The Contract Monthly Claims Management System is a web application built with ASP.NET Core MVC.
 It helps lecturers submit their monthly claims online and makes it easier for Programme Coordinators, Academic Managers, and HR to review, approve, and process those claims.
 
