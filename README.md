@@ -44,3 +44,18 @@ Manage lecturer data (basic profile info).
 
 Export payment summaries.
 ******************************************
+Technologies Used:
+
+ASP.NET Core MVC
+
+Entity Framework Core
+
+SQL Server / Azure SQL
+
+ASP.NET Identity (User authentication & roles)
+
+JavaScript + jQuery (client-side validation & automation)
+
+Bootstrap (UI styling)
+
+GitHub (version control)
