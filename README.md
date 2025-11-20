@@ -76,3 +76,17 @@ Key Relationships
 One Lecturer : Many Claims
 
 One Claim : Many Supporting Documents
+*****************************************************
+Unit Testing
+
+The following areas are covered in unit tests:
+
+Claim submission validation
+
+Document upload validation
+
+Claim status updates
+
+Approval workflow logic
+
+Error handling and exception cases
