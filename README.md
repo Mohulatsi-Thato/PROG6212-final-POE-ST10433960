@@ -59,3 +59,20 @@ JavaScript + jQuery (client-side validation & automation)
 Bootstrap (UI styling)
 
 GitHub (version control)
+*****************************************************
+Database Structure
+Main Tables
+
+Lecturers : lecturer information
+
+Claims : claim entries (hours, rate, total, status)
+
+Documents : file uploads linked to claims
+
+AspNetUsers / AspNetRoles : Identity tables for access control
+
+Key Relationships
+
+One Lecturer : Many Claims
+
+One Claim : Many Supporting Documents
